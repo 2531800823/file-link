@@ -163,6 +163,16 @@
         {
           "command": "file-link.editLink",
           "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "inline@1"
+        },
+        {
+          "command": "file-link.deleteLink",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "inline@2"
+        },
+        {
+          "command": "file-link.editLink",
+          "when": "view == fileLinkExplorer && viewItem == link",
           "group": "1_edit@1"
         },
         {
@@ -179,6 +189,21 @@
           "command": "file-link.deleteLink",
           "when": "view == fileLinkExplorer && viewItem == link",
           "group": "2_delete@1"
+        },
+        {
+          "command": "file-link.createCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "inline@1"
+        },
+        {
+          "command": "file-link.renameCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "inline@2"
+        },
+        {
+          "command": "file-link.deleteCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "inline@3"
         },
         {
           "command": "file-link.createCategory",

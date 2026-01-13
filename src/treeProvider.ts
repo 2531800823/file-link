@@ -197,12 +197,12 @@ export class FileLinkTreeProvider
       link
     );
 
-    // 构建描述：路径 + 行号信息
-    let description = link.path;
+    // 构建简短描述：只显示行号信息（如果有的话），路径放在 tooltip 中
+    let shortDescription = "";
     if (link.line !== undefined) {
-      description += `:${link.line}`;
+      shortDescription = `L${link.line}`;
       if (link.column !== undefined && link.column > 1) {
-        description += `:${link.column}`;
+        shortDescription += `:${link.column}`;
       }
     }
 
@@ -213,17 +213,20 @@ export class FileLinkTreeProvider
         "warning",
         new vscode.ThemeColor("errorForeground")
       );
-      item.tooltip = `文件不存在: ${link.path}`;
-      item.description = `⚠️ ${description}`;
+      item.tooltip = `⚠️ 文件不存在: ${link.path}`;
+      item.description = shortDescription ? `⚠️ ${shortDescription}` : "⚠️ 不存在";
     } else {
-      item.description = description;
-      // 构建 tooltip
-      let tooltip = link.path;
+      item.description = shortDescription;
+      // 构建详细的 tooltip
+      let tooltip = `📁 ${link.path}`;
       if (link.line !== undefined) {
-        tooltip += `\n行: ${link.line}`;
+        tooltip += `\n📍 行: ${link.line}`;
         if (link.column !== undefined) {
           tooltip += `, 列: ${link.column}`;
         }
+      }
+      if (link.alias) {
+        tooltip += `\n🏷️ 别名: ${link.alias}`;
       }
       item.tooltip = tooltip;
     }
