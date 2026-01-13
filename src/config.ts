@@ -5,12 +5,12 @@
 
 import * as vscode from "vscode";
 import * as path from "path";
+import * as crypto from "crypto";
 import {
   FileLinkConfig,
   FileLink,
   Category,
   DEFAULT_CONFIG,
-  CONFIG_FILE_NAME,
   ImportValidationResult,
 } from "./types";
 
@@ -28,15 +28,38 @@ export class ConfigManager {
   /** 配置变更事件 */
   public readonly onConfigChanged = this._onConfigChanged.event;
 
+  /** 全局存储路径 */
+  private globalStorageUri: vscode.Uri | undefined;
+
   /**
-   * 获取配置文件的 URI
+   * 设置全局存储路径
+   */
+  public setGlobalStorageUri(uri: vscode.Uri): void {
+    this.globalStorageUri = uri;
+  }
+
+  /**
+   * 根据工作区路径生成唯一的配置文件名
+   * 使用工作区路径的 hash 作为文件名，避免不同项目的配置冲突
+   */
+  private getWorkspaceConfigFileName(): string {
+    const workspaceUri = this.getWorkspaceUri();
+    if (!workspaceUri) {
+      return "default.json";
+    }
+    // 使用 MD5 hash 生成唯一标识
+    const hash = crypto.createHash("md5").update(workspaceUri.fsPath).digest("hex");
+    return `${hash}.json`;
+  }
+
+  /**
+   * 获取配置文件的 URI（存储在全局存储目录中）
    */
   private getConfigUri(): vscode.Uri | undefined {
-    const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (!workspaceFolders || workspaceFolders.length === 0) {
+    if (!this.globalStorageUri) {
       return undefined;
     }
-    return vscode.Uri.joinPath(workspaceFolders[0].uri, CONFIG_FILE_NAME);
+    return vscode.Uri.joinPath(this.globalStorageUri, this.getWorkspaceConfigFileName());
   }
 
   /**
@@ -54,6 +77,14 @@ export class ConfigManager {
    * 初始化配置管理器，加载配置文件
    */
   public async initialize(): Promise<void> {
+    // 确保全局存储目录存在
+    if (this.globalStorageUri) {
+      try {
+        await vscode.workspace.fs.createDirectory(this.globalStorageUri);
+      } catch {
+        // 目录可能已存在，忽略错误
+      }
+    }
     await this.loadConfig();
   }
 

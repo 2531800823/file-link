@@ -86,8 +86,3 @@ export const DEFAULT_CONFIG: FileLinkConfig = {
   links: [],
   categories: [],
 };
-
-/**
- * 配置文件名
- */
-export const CONFIG_FILE_NAME = ".file-links.json";

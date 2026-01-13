@@ -2,7 +2,7 @@
   "name": "file-link",
   "displayName": "文件链接管理",
   "description": "VS Code 文件链接管理插件，支持快速访问常用文件、别名管理、目录分类和自定义排序",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "publisher": "file-link",
   "engines": {
     "vscode": "^1.89.0"

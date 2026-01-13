@@ -29,6 +29,8 @@ export async function activate(
 
   // 初始化配置管理器
   const configManager = getConfigManager();
+  // 设置全局存储路径（配置文件将存储在此目录下）
+  configManager.setGlobalStorageUri(context.globalStorageUri);
   await configManager.initialize();
 
   // 创建 TreeView 提供者
@@ -44,9 +46,6 @@ export async function activate(
 
   // 注册所有命令
   registerCommands(context, configManager, treeProvider);
-
-  // 监听配置文件变化
-  watchConfigFile(context, configManager);
 
   // 将 TreeView 添加到订阅中
   context.subscriptions.push(treeView);
@@ -303,46 +302,6 @@ function createDragAndDropController(
       treeProvider.refresh();
     },
   };
-}
-
-/**
- * 监听配置文件变化
- */
-function watchConfigFile(
-  context: vscode.ExtensionContext,
-  configManager: ConfigManager
-): void {
-  const workspaceUri = configManager.getWorkspaceUri();
-  if (!workspaceUri) {
-    return;
-  }
-
-  const configPattern = new vscode.RelativePattern(
-    workspaceUri,
-    ".file-links.json"
-  );
-
-  const watcher = vscode.workspace.createFileSystemWatcher(configPattern);
-
-  // 文件被修改时重新加载
-  watcher.onDidChange(async () => {
-    await configManager.loadConfig();
-    treeProvider?.refresh();
-  });
-
-  // 文件被创建时重新加载
-  watcher.onDidCreate(async () => {
-    await configManager.loadConfig();
-    treeProvider?.refresh();
-  });
-
-  // 文件被删除时重置配置
-  watcher.onDidDelete(async () => {
-    await configManager.loadConfig();
-    treeProvider?.refresh();
-  });
-
-  context.subscriptions.push(watcher);
 }
 
 // ========== 命令实现函数 ==========
