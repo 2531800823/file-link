@@ -1,71 +1,151 @@
-# file-link README
+# 文件链接管理 (File Link)
 
-This is the README for your extension "file-link". After writing up a brief description, we recommend including the following sections.
+一个 VS Code 扩展插件，用于在编辑器中快速管理和访问项目中的文件链接，支持通过侧边栏和右键菜单进行操作，提供便捷的文件导航功能。
 
-## Features
+## 功能特性
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### 核心功能
 
-For example if there is an image subfolder under your extension project workspace:
+- ✅ **快速访问** - 在侧边栏快速访问项目中的常用文件
+- ✅ **行号跳转** - 支持添加文件特定行的链接，点击后直接跳转到对应位置
+- ✅ **别名管理** - 支持为文件链接设置自定义别名，提高可读性
+- ✅ **目录分类** - 支持创建多级目录，便于组织管理
+- ✅ **自定义排序** - 支持拖拽排序链接和目录
+- ✅ **项目配置** - 配置基于项目存储在 `.file-links.json` 文件中
+- ✅ **导入/导出** - 支持配置的导入和导出，便于团队协作
 
-\!\[feature X\]\(images/feature-x.png\)
+### 操作方式
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. **文件资源管理器右键** - 在文件资源管理器中右键点击文件，选择"添加到文件链接"
+2. **编辑器右键** - 在编辑器中右键点击，选择"添加当前行到文件链接"（支持行号跳转）
+3. **侧边栏管理** - 在侧边栏的"文件链接"视图中进行管理操作
+4. **命令面板** - 通过命令面板执行导入/导出等操作
 
-## Requirements
+## 安装
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+1. 打开 VS Code
+2. 按 `Ctrl+Shift+X` 打开扩展市场
+3. 搜索 "文件链接管理" 或 "file-link"
+4. 点击安装
 
-## Extension Settings
+## 使用方法
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### 添加文件链接
 
-For example:
+**方式一：从文件资源管理器添加**
 
-This extension contributes the following settings:
+1. 在 VS Code 文件资源管理器中，右键点击要添加的文件或文件夹
+2. 选择"添加到文件链接"
+3. 输入别名（可选，留空则使用文件名）
+4. 选择目录（可选）
+5. 确认添加
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+**方式二：从编辑器添加（支持行号跳转）**
 
-## Known Issues
+1. 在编辑器中打开文件，将光标定位到想要跳转的行
+2. 右键点击，选择"添加当前行到文件链接"
+3. 输入别名（可选）
+4. 选择目录（可选）
+5. 确认添加
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+添加后，点击该链接会自动打开文件并跳转到指定行
 
-## Release Notes
+### 管理链接
 
-Users appreciate release notes as you update your extension.
+在侧边栏的"文件链接"视图中：
 
-### 1.0.0
+- **打开文件** - 单击链接即可打开对应文件（如有设置行号会自动跳转）
+- **编辑链接** - 右键点击链接，选择"编辑链接"（可编辑别名、路径、行号）
+- **删除链接** - 右键点击链接，选择"删除链接"
+- **移动链接** - 右键点击链接，选择"移动到目录"
+- **在资源管理器中显示** - 右键点击链接，选择"在资源管理器中显示"
 
-Initial release of ...
+### 管理目录
 
-### 1.0.1
+- **创建目录** - 点击视图标题栏的"新建文件夹"图标，或右键点击目录选择"创建目录"
+- **重命名目录** - 右键点击目录，选择"重命名目录"
+- **删除目录** - 右键点击目录，选择"删除目录"
 
-Fixed issue #.
+### 拖拽排序
 
-### 1.1.0
+- 拖拽链接到其他位置进行排序
+- 拖拽链接到目录中进行分类
+- 拖拽目录调整层级关系
 
-Added features X, Y, and Z.
+### 导入/导出配置
 
----
+- **导出** - 点击视图标题栏的菜单，选择"导出配置"
+- **导入** - 点击视图标题栏的菜单，选择"导入配置"
 
-## Following extension guidelines
+## 配置文件
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+配置存储在项目根目录的 `.file-links.json` 文件中：
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+```json
+{
+  "version": "1.0.0",
+  "links": [
+    {
+      "id": "unique-id",
+      "path": "src/components/Button.tsx",
+      "alias": "按钮组件",
+      "categoryId": "category-id",
+      "order": 0,
+      "line": 42,
+      "column": 1
+    }
+  ],
+  "categories": [
+    {
+      "id": "category-id",
+      "name": "组件",
+      "order": 0,
+      "parentId": null
+    }
+  ]
+}
+```
 
-## Working with Markdown
+## 使用场景
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+### 场景一：快速访问常用文件
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+开发者经常需要访问项目中的某些核心文件（如配置文件、工具函数等），通过添加文件链接，可以在侧边栏快速访问，无需在文件树中查找。
 
-## For more information
+### 场景二：项目文档管理
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+在大型项目中，文档分散在不同目录，通过目录分类，将相关文档组织在一起，便于查找。
 
-**Enjoy!**
+### 场景三：团队协作
+
+团队成员可以共享配置文件，统一项目中的常用文件链接。新成员加入项目时，导入配置文件即可快速了解项目结构。
+
+## 命令列表
+
+| 命令 | 说明 |
+|------|------|
+| `file-link.addLinkAtLine` | 添加当前行到文件链接 |
+| `file-link.createCategory` | 创建目录 |
+| `file-link.refresh` | 刷新视图 |
+| `file-link.exportConfig` | 导出配置 |
+| `file-link.importConfig` | 导入配置 |
+
+## 开发
+
+```bash
+# 安装依赖
+pnpm install
+
+# 编译
+pnpm run compile
+
+# 监听模式开发
+pnpm run watch
+
+# 打包
+pnpm run package
+```
+
+## License
+
+MIT

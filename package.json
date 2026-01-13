@@ -1,25 +1,253 @@
 {
   "name": "file-link",
-  "displayName": "file-link",
-  "description": "",
+  "displayName": "文件链接管理",
+  "description": "VS Code 文件链接管理插件，支持快速访问常用文件、别名管理、目录分类和自定义排序",
   "version": "0.0.1",
+  "publisher": "file-link",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.89.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "file",
+    "link",
+    "bookmark",
+    "navigation",
+    "文件链接",
+    "书签"
+  ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "file-link-container",
+          "title": "文件链接",
+          "icon": "$(link)"
+        }
+      ]
+    },
+    "views": {
+      "file-link-container": [
+        {
+          "id": "fileLinkExplorer",
+          "name": "文件链接",
+          "icon": "$(link)",
+          "contextualTitle": "文件链接管理"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "file-link.helloWorld",
-        "title": "Hello World"
+        "command": "file-link.addLink",
+        "title": "添加到文件链接",
+        "category": "文件链接",
+        "icon": "$(add)"
+      },
+      {
+        "command": "file-link.openLink",
+        "title": "打开文件",
+        "category": "文件链接",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "file-link.editLink",
+        "title": "编辑链接",
+        "category": "文件链接",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "file-link.deleteLink",
+        "title": "删除链接",
+        "category": "文件链接",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "file-link.moveLink",
+        "title": "移动到目录",
+        "category": "文件链接",
+        "icon": "$(file-symlink-directory)"
+      },
+      {
+        "command": "file-link.revealInExplorer",
+        "title": "在资源管理器中显示",
+        "category": "文件链接",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "file-link.createCategory",
+        "title": "创建目录",
+        "category": "文件链接",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "file-link.renameCategory",
+        "title": "重命名目录",
+        "category": "文件链接",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "file-link.deleteCategory",
+        "title": "删除目录",
+        "category": "文件链接",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "file-link.refresh",
+        "title": "刷新",
+        "category": "文件链接",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "file-link.exportConfig",
+        "title": "导出配置",
+        "category": "文件链接",
+        "icon": "$(export)"
+      },
+      {
+        "command": "file-link.importConfig",
+        "title": "导入配置",
+        "category": "文件链接",
+        "icon": "$(import)"
+      },
+      {
+        "command": "file-link.addLinkAtLine",
+        "title": "添加当前行到文件链接",
+        "category": "文件链接",
+        "icon": "$(add)"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "file-link.addLink",
+          "when": "explorerResourceIsFolder || explorerResourceIsRoot == false",
+          "group": "navigation@99"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "file-link.addLinkAtLine",
+          "when": "editorTextFocus",
+          "group": "navigation@99"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "file-link.createCategory",
+          "when": "view == fileLinkExplorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "file-link.refresh",
+          "when": "view == fileLinkExplorer",
+          "group": "navigation@2"
+        },
+        {
+          "command": "file-link.importConfig",
+          "when": "view == fileLinkExplorer",
+          "group": "1_import@1"
+        },
+        {
+          "command": "file-link.exportConfig",
+          "when": "view == fileLinkExplorer",
+          "group": "1_import@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "file-link.editLink",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "1_edit@1"
+        },
+        {
+          "command": "file-link.moveLink",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "1_edit@2"
+        },
+        {
+          "command": "file-link.revealInExplorer",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "1_edit@3"
+        },
+        {
+          "command": "file-link.deleteLink",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "2_delete@1"
+        },
+        {
+          "command": "file-link.createCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "1_category@1"
+        },
+        {
+          "command": "file-link.renameCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "1_category@2"
+        },
+        {
+          "command": "file-link.deleteCategory",
+          "when": "view == fileLinkExplorer && viewItem == category",
+          "group": "2_delete@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "file-link.addLink",
+          "when": "false"
+        },
+        {
+          "command": "file-link.openLink",
+          "when": "false"
+        },
+        {
+          "command": "file-link.editLink",
+          "when": "false"
+        },
+        {
+          "command": "file-link.deleteLink",
+          "when": "false"
+        },
+        {
+          "command": "file-link.moveLink",
+          "when": "false"
+        },
+        {
+          "command": "file-link.revealInExplorer",
+          "when": "false"
+        },
+        {
+          "command": "file-link.renameCategory",
+          "when": "false"
+        },
+        {
+          "command": "file-link.deleteCategory",
+          "when": "false"
+        },
+        {
+          "command": "file-link.createCategory"
+        },
+        {
+          "command": "file-link.refresh"
+        },
+        {
+          "command": "file-link.exportConfig"
+        },
+        {
+          "command": "file-link.importConfig"
+        },
+        {
+          "command": "file-link.addLinkAtLine",
+          "when": "editorTextFocus"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
