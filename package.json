@@ -120,6 +120,18 @@
         "title": "添加当前行到文件链接",
         "category": "文件链接",
         "icon": "$(add)"
+      },
+      {
+        "command": "file-link.copyPath",
+        "title": "复制路径",
+        "category": "文件链接",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "file-link.copyRelativePath",
+        "title": "复制相对路径",
+        "category": "文件链接",
+        "icon": "$(copy)"
       }
     ],
     "menus": {
@@ -186,6 +198,16 @@
           "group": "1_edit@3"
         },
         {
+          "command": "file-link.copyPath",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "1_edit@4"
+        },
+        {
+          "command": "file-link.copyRelativePath",
+          "when": "view == fileLinkExplorer && viewItem == link",
+          "group": "1_edit@5"
+        },
+        {
           "command": "file-link.deleteLink",
           "when": "view == fileLinkExplorer && viewItem == link",
           "group": "2_delete@1"
@@ -244,6 +266,14 @@
         },
         {
           "command": "file-link.revealInExplorer",
+          "when": "false"
+        },
+        {
+          "command": "file-link.copyPath",
+          "when": "false"
+        },
+        {
+          "command": "file-link.copyRelativePath",
           "when": "false"
         },
         {

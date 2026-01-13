@@ -138,6 +138,30 @@ function registerCommands(
     )
   );
 
+  // 复制路径
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "file-link.copyPath",
+      async (item: FileLinkTreeItem) => {
+        if (item && item.itemType === TreeItemType.Link) {
+          await copyPath(configManager, item.data as FileLink);
+        }
+      }
+    )
+  );
+
+  // 复制相对路径
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "file-link.copyRelativePath",
+      async (item: FileLinkTreeItem) => {
+        if (item && item.itemType === TreeItemType.Link) {
+          await copyRelativePath(item.data as FileLink);
+        }
+      }
+    )
+  );
+
   // 创建目录
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -730,6 +754,33 @@ async function revealInExplorer(
   }
 
   await vscode.commands.executeCommand("revealInExplorer", fileUri);
+}
+
+/**
+ * 复制文件路径到剪贴板（绝对路径）
+ */
+async function copyPath(
+  configManager: ConfigManager,
+  link: FileLink
+): Promise<void> {
+  const fileUri = configManager.getFileUri(link.path);
+  if (!fileUri) {
+    vscode.window.showErrorMessage("无法获取文件路径");
+    return;
+  }
+
+  // 复制绝对路径到剪贴板
+  await vscode.env.clipboard.writeText(fileUri.fsPath);
+  vscode.window.showInformationMessage("路径已复制到剪贴板");
+}
+
+/**
+ * 复制文件相对路径到剪贴板
+ */
+async function copyRelativePath(link: FileLink): Promise<void> {
+  // link.path 本身就是相对路径
+  await vscode.env.clipboard.writeText(link.path);
+  vscode.window.showInformationMessage("相对路径已复制到剪贴板");
 }
 
 /**
